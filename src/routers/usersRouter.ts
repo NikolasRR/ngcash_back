@@ -1,8 +1,12 @@
-import { Router} from "express";
-import controllers from "../controllers/usersController";
+import { Router } from "express";
+
+import controllers from "../controllers/usersController.js";
+import middleware from "../middlewares/usersMiddleware.js";
 
 const usersRouter = Router();
 
-usersRouter.post('/sign-up', controllers.createUser)
+usersRouter
+  .post('/sign-up', middleware.verifyUserData, controllers.createUser)
+  .post('/sign-in', middleware.verifyUserData,)
 
 export default usersRouter;
