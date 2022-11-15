@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 type error = {
   type: string,
@@ -10,6 +11,9 @@ async function errorHandler(error: error, req: Request, res: Response, next: Nex
 
   switch (error.type) {
     case "user info":
+      code = 400;
+      break;
+    case "token":
       code = 400;
       break;
     case "conflict":

@@ -10,8 +10,17 @@ async function createOne(prismaClient: PrismaClient) {
   })
 }
 
+async function getById(id: number) {
+  return await prisma.account.findUnique({
+    where: {
+      id: id
+    }
+  })
+}
+
 const accountRepo = {
-  createOne
+  createOne,
+  getById
 }
 
 export default accountRepo;

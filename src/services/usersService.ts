@@ -29,6 +29,7 @@ async function logInUser(username: string, password: string) {
   verifyUserPassword(user.password, password);
 
   delete user.password;
+
   const TwentyFourHours = '24h';
   const token = jwt.sign(user, process.env.SUPERSECRET_JWTKEY, { expiresIn: TwentyFourHours });
   return token;
