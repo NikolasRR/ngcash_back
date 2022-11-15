@@ -7,6 +7,6 @@ const usersRouter = Router();
 
 usersRouter
   .post('/sign-up', middleware.verifyUserData, controllers.createUser)
-  .post('/sign-in', middleware.verifyUserData,)
+  .post('/sign-in', middleware.verifyUserData, controllers.userSignIn)
 
 export default usersRouter;

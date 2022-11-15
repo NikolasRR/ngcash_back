@@ -9,8 +9,17 @@ async function createUser(req: Request, res: Response) {
   res.sendStatus(201);
 }
 
+async function userSignIn(req: Request, res: Response) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const token = await userService.logInUser(username, password);
+  res.send({ token: token });
+}
+
 const controllers = {
-  createUser
+  createUser,
+  userSignIn
 }
 
 export default controllers;
