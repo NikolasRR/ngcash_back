@@ -1,19 +1,25 @@
-import jwt from "jsonwebtoken";
-import accountRepo from "../repositories/accountRepository.js";
-import { TokenBody } from "../types/accountTypes.js";
+import { TokenPayload } from "../middlewares/tokenValidator.js";
+import accountRepo from "../repositories/accountsRepository.js";
 
-async function getAccountBalance(token: string) {
-  let tokenData: TokenBody;
-  jwt.verify(token, process.env.SUPERSECRET_JWTKEY, (err, decoded) => {
-    if (err) throw { type: "token", message: err.message }
-    tokenData = decoded as TokenBody;
-  });
+async function getAccountBalance(data: TokenPayload) {
+  const account = await accountRepo.getById(data.accountId);
+  account.balance /= 100;
 
-  return await accountRepo.getById(tokenData.accountId);
+  return account;
+}
+
+async function verifyFunds(accountId: number, value: number) {
+  const account = await accountRepo.getById(accountId);
+
+  const fundsAreSuficient = (account.balance - value*100) >= 0;
+  if(fundsAreSuficient) return;
+
+  throw { type: "funds" };
 }
 
 const accountService = {
-  getAccountBalance
+  getAccountBalance,
+  verifyFunds
 }
 
 export default accountService;

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import prisma from "../database/db.js";
-import accountRepo from "./accountRepository.js";
+import accountRepo from "./accountsRepository.js";
 
 async function createOne(username: string, password: string) {
   await prisma.$transaction(async (unCommitedPrisma: PrismaClient) => {
@@ -16,10 +16,7 @@ async function createOne(username: string, password: string) {
       }
     });
     if (!user) throw { type: "database" };
-    throw { type: "database" }
   });
-
-
 }
 
 async function getByUsername(username: string) {

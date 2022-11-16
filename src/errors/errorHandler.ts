@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { JsonWebTokenError } from "jsonwebtoken";
 
 type error = {
   type: string,
@@ -10,27 +9,31 @@ async function errorHandler(error: error, req: Request, res: Response, next: Nex
   let code: number;
 
   switch (error.type) {
-    case "user info":
+    case "schema":
       code = 400;
       break;
     case "token":
       code = 400;
       break;
-    case "conflict":
+      case "funds":
+      code = 400;
+      error.message = "insuficient funds"
+      break;
+    case "authorization":
       code = 401;
-      error.message = "username already taken";
+      error.message = "unauthorized";
       break;
     case "not found":
       code = 404;
       error.message = "user not found";
       break;
-    case "authorization":
+    case "conflict":
       code = 409;
-      error.message = "unauthorized";
+      error.message = "username already taken";
       break;
     case "database":
       code = 500;
-      error.message = "something went wrong while creating the account and user";
+      error.message = "error in the database";
       break;
     default:
       code = 500;

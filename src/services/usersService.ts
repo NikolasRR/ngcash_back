@@ -1,8 +1,7 @@
-import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import usersRepo from "../repositories/userRepository.js";
+import usersRepo from "../repositories/usersRepository.js";
 
 async function verifyUserExistence(username: string, shouldExist: boolean) {
   const user = await usersRepo.getByUsername(username);
@@ -38,7 +37,8 @@ async function logInUser(username: string, password: string) {
 
 const userService = {
   createUser,
-  logInUser
+  logInUser,
+  verifyUserExistence
 }
 
 export default userService;
