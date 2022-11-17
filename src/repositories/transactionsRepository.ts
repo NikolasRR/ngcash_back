@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import prisma from "../database/db.js";
+import { SortOrder } from "../middlewares/schemas/transactionsSchemas.js";
 import accountRepo from "./accountsRepository.js";
 
 async function createTransaction(value: number, from: number, to: number) {
@@ -17,28 +18,55 @@ async function createTransaction(value: number, from: number, to: number) {
       }
     });
 
-    if(!transaction || !debited || !credited) throw { type: "database" };
+    if (!transaction || !debited || !credited) throw { type: "database" };
   })
 }
 
-async function getTransactionsByAccId(id: number) {
-  await prisma.transaction.findMany({
+async function getAccCashInTransactionsById(accountId: number | null, organizer: SortOrder) {
+  return await prisma.transaction.findMany({
+    where: {
+      creditedAccountId: accountId
+    },
+    orderBy: {
+      createdAt: organizer
+    }
+  })
+}
+
+async function getAccCashOutTransactionsById(accountId: number, organizer: SortOrder) {
+  return await prisma.transaction.findMany({
+    where: {
+      debitedAccountId: accountId
+    },
+    orderBy: {
+      createdAt: organizer
+    }
+  })
+}
+
+async function getAllAccTransactionsById(accountId: number, organizer: SortOrder) {
+  return await prisma.transaction.findMany({
     where: {
       OR: [
         {
-          creditedAccountId: id
+          debitedAccountId: accountId
         },
         {
-          debitedAccountId: id
+          creditedAccountId: accountId
         }
       ]
+    },
+    orderBy: {
+      createdAt: organizer
     }
   })
 }
 
 const transactionsRepo = {
   createTransaction,
-  getTransactionsByAccId
+  getAccCashInTransactionsById,
+  getAccCashOutTransactionsById,
+  getAllAccTransactionsById
 }
 
 export default transactionsRepo;

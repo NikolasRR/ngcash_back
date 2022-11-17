@@ -15,9 +15,13 @@ async function errorHandler(error: error, req: Request, res: Response, next: Nex
     case "token":
       code = 400;
       break;
-      case "funds":
+    case "funds":
       code = 400;
       error.message = "insuficient funds"
+      break;
+    case "query params":
+      code = 400;
+      error.message = "check your query params"
       break;
     case "authorization":
       code = 401;

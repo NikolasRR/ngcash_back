@@ -1,5 +1,7 @@
 import Joi from "joi";
 
+export type SortOrder = 'desc' | 'asc';
+
 export type TransferReceiverInfo = {
   accountId: number,
   username: string,

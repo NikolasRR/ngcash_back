@@ -11,7 +11,7 @@ async function getAccountBalance(data: TokenPayload) {
 async function verifyFunds(accountId: number, value: number) {
   const account = await accountRepo.getById(accountId);
 
-  const fundsAreSuficient = (account.balance - value*100) >= 0;
+  const fundsAreSuficient = (account.balance - value) >= 0;
   if(fundsAreSuficient) return;
 
   throw { type: "funds" };

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { TransferReceiverInfo } from "../middlewares/schemas/transferSchema.js";
+import { SortOrder, TransferReceiverInfo } from "../middlewares/schemas/transactionsSchemas.js";
 import { TokenPayload } from "../middlewares/tokenValidator.js";
 import transactionsService from "../services/transactionsService.js";
 
@@ -11,14 +11,24 @@ async function cashOut(req: Request, res: Response) {
     token.accountId, 
     transferInfo.accountId, 
     transferInfo.username,  
-    transferInfo.value
+    Math.round(transferInfo.value*100)
   );
 
   res.sendStatus(200);
 }
 
+async function transactionsHistory(req: Request, res: Response) {
+  const token: TokenPayload = res.locals.tokenBody;
+  const transactionsType = req.query.type as string;
+  const organizer = req.query.orderBy as SortOrder;
+
+  const history = await transactionsService.getTransactionsFromAcc(token.accountId, organizer, transactionsType);
+  res.send(history);
+}
+
 const controllers = {
-  cashOut
+  cashOut,
+  transactionsHistory
 }
 
 export default controllers;

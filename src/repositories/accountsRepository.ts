@@ -25,7 +25,7 @@ async function incrementBalance(id: number, value: number, prismaClient: PrismaC
     },
     data: {
       balance: {
-        increment: value*100
+        increment: value
       }
     }
   })
@@ -38,7 +38,7 @@ async function decrementBalance(id: number, value: number, prismaClient: PrismaC
     },
     data: {
       balance: {
-        decrement: value*100
+        decrement: value
       }
     }
   })

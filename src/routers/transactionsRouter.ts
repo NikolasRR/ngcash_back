@@ -7,6 +7,7 @@ import middleware from "../middlewares/transactionsMiddleware.js";
 const transactionRouter = Router();
 
 transactionRouter
-  .post('/cash-out', validateToken, middleware.verifyTransferData, controllers.cashOut);
+  .post('/transactions/cash-out', validateToken, middleware.verifyTransferData, controllers.cashOut)
+  .get('/transactions', validateToken, middleware.verifyQueries, controllers.transactionsHistory)
 
 export default transactionRouter;
