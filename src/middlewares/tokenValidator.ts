@@ -8,7 +8,9 @@ export type TokenPayload = Omit<User, 'password'> & {
 }
 
 function validateToken(req: Request, res: Response, next: NextFunction) {
-  jwt.verify(req.headers.authorization, process.env.SUPERSECRET_JWTKEY, (err, decoded) => {
+  const providedToken = req.headers.authorization;
+  const key = process.env.SUPERSECRET_JWTKEY;
+  jwt.verify(providedToken, key, (err, decoded) => {
     if (err) throw { type: "token", message: err.message }
     res.locals.tokenBody = decoded;
   });
