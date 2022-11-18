@@ -71,4 +71,8 @@ Web aplication whose purpose is to enable NG users to be able to carry out inter
 - returns the users transaction history acording to the query params:
     - `type=in` to get only *cash-in* transactions
     - `type=out` to get only *cash-out* transactions
-    - if *type* is not specified returns all transactions
+    - if **type** is not specified or is left as `?type=`, returns all types of transactions
+    - `date=YYYY-MM-DD` to get the transactions from the specified date
+    - if **date** is not specified, returns all transactions
+    - differente from **type**, leaving **date** as `?date=` is not allowed
+- requires the user token in the `Authorization` header
