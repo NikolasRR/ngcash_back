@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
 import prisma from "../database/db.js";
-import { SortOrder } from "../middlewares/schemas/transactionsSchemas.js";
 import accountRepo from "./accountsRepository.js";
 
 async function createTransaction(value: number, from: number, to: number) {
@@ -22,29 +21,51 @@ async function createTransaction(value: number, from: number, to: number) {
   })
 }
 
-async function getAccCashInTransactionsById(accountId: number | null, organizer: SortOrder) {
+async function getAccCashInTransactionsById(accountId: number, start: string, end: string) {
   return await prisma.transaction.findMany({
     where: {
-      creditedAccountId: accountId
+      creditedAccountId: accountId,
+      ...(
+        start ?
+          {
+            createdAt: {
+              gte: start,
+              lt: end
+            }
+          } 
+          :
+          {}
+      )
     },
     orderBy: {
-      createdAt: organizer
+      createdAt: 'desc'
     }
   })
 }
 
-async function getAccCashOutTransactionsById(accountId: number, organizer: SortOrder) {
+async function getAccCashOutTransactionsById(accountId: number, start: string, end: string) {
   return await prisma.transaction.findMany({
     where: {
-      debitedAccountId: accountId
+      debitedAccountId: accountId,
+      ...(
+        start ?
+          {
+            createdAt: {
+              gte: start,
+              lt: end
+            }
+          } 
+          :
+          {}
+      )
     },
     orderBy: {
-      createdAt: organizer
+      createdAt: 'desc'
     }
   })
 }
 
-async function getAllAccTransactionsById(accountId: number, organizer: SortOrder) {
+async function getAllAccTransactionsById(accountId: number, start: string, end: string) {
   return await prisma.transaction.findMany({
     where: {
       OR: [
@@ -54,10 +75,21 @@ async function getAllAccTransactionsById(accountId: number, organizer: SortOrder
         {
           creditedAccountId: accountId
         }
-      ]
+      ],
+      ...(
+        start ?
+          {
+            createdAt: {
+              gte: start,
+              lt: end
+            }
+          } 
+          :
+          {}
+      )
     },
     orderBy: {
-      createdAt: organizer
+      createdAt: 'desc'
     }
   })
 }

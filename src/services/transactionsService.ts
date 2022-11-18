@@ -1,5 +1,5 @@
 import { Transaction } from "@prisma/client";
-import { SortOrder } from "../middlewares/schemas/transactionsSchemas.js";
+import dayjs from "dayjs";
 import transactionsRepo from "../repositories/transactionsRepository.js";
 import accountService from "./accountsService.js";
 import userService from "./usersService.js";
@@ -17,17 +17,20 @@ async function transferFunds(
   await transactionsRepo.createTransaction(value, debitedAccId, creditedAccId);
 }
 
-async function getTransactionsFromAcc(accountId: number, organizer: SortOrder = 'desc', type: string) {
+async function getTransactionsFromAcc(accountId: number, date: string, type: string) {
+  const start = date ? dayjs(date).toISOString() : null;
+  const end = date ? dayjs(date).add(1, 'day').toISOString() : null;
   let history: Transaction[];
+
   switch (type) {
     case "in":
-      history = await transactionsRepo.getAccCashInTransactionsById(accountId, organizer);
+      history = await transactionsRepo.getAccCashInTransactionsById(accountId, start, end);
       break;
     case "out":
-      history = await transactionsRepo.getAccCashOutTransactionsById(accountId, organizer);
+      history = await transactionsRepo.getAccCashOutTransactionsById(accountId, start, end);
       break;
     default:
-      history = await transactionsRepo.getAllAccTransactionsById(accountId, organizer);
+      history = await transactionsRepo.getAllAccTransactionsById(accountId, start, end);
 
       break;
   }

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { SortOrder, transferSchema } from "./schemas/transactionsSchemas.js";
+import { dateFilterSchema, transferSchema } from "./schemas/transactionsSchemas.js";
 
 function verifyTransferData(req: Request, res: Response, next: NextFunction) {
   const validation = transferSchema.validate(req.body, { abortEarly: false });
@@ -14,16 +14,21 @@ function verifyTransferData(req: Request, res: Response, next: NextFunction) {
 
 function verifyQueries(req: Request, res: Response, next: NextFunction) {
   const transactionsType = req.query.type as string;
-  const order = req.query.orderBy as SortOrder;
+  const dateFilter = req.query.date;
+
+  const validation = dateFilterSchema.validate(dateFilter, { abortEarly: false });
+  if (validation.error) throw {
+    type: "schema",
+    message: "check the data format"
+  };
 
   const typeIsAcceptable =
     transactionsType === "in" ||
     transactionsType === "out" ||
     transactionsType === "" ||
     !transactionsType;
-  const orderIsAcceptable = order === "asc" || order === "desc" || order === "" || !order;
 
-  if (typeIsAcceptable && orderIsAcceptable) {
+  if (typeIsAcceptable) {
     next();
     return;
   }
