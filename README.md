@@ -13,7 +13,7 @@ Web aplication whose purpose is to enable NG users to be able to carry out inter
 
 ## How to Run
 ### Steps using localhost
-- bash `npm i` in the terminal
+- bash `npm i` and `npm i -D` in the terminal
 - create a .env file
 - write the following on it
     - `PORT=` port where the back-end will run on 
@@ -23,7 +23,6 @@ Web aplication whose purpose is to enable NG users to be able to carry out inter
     - `POSTGRES_PORT=5432` default port for postgres
     - `POSTGRES_DATABASE=` name you can choose for the database
     - `DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
-    - `SPACENEWS_URL=https://api.spaceflightnewsapi.net/v3/articles`
 
 - bash `npx prisma generate` in the terminal
 - bash `npx prisma migrate dev` in the terminal
